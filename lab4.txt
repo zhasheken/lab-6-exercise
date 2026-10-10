@@ -1,1 +1,35 @@
 Answer written questions here:
+------------------------------------------------
+1. In our doubling-iteration scheme, why do we start from a low number? 
+Consider effects on rendering time/responsiveness and that we must finish a call
+to mandelbrotSmooth for each pixel before going on to the next frame.
+
+A: We start low so each frame finishes quickly, since every pixel has to finish 
+its mandelbrotSmooth call before the next frame can be drawn. If we started 
+high, the window would freeze while moving or zooming, so we keep it fast 
+while the view is changing and only add more detail once it stops.
+
+------------------------------------------------
+2. Propose a way to increase efficiency of rendering for high iteration counts, 
+exploiting that the rendering of each pixel is independent of the other pixels, 
+and assuming you can use multiple computers/cores/threads at the same time 
+(whatever level of abstraction you're comfortable with). In particular, suppose 
+you can coordinate these computers by having one of them delegate tasks to 
+others and wait for their results.
+
+A:
+Since each pixel doesn’t depend on any other pixel, we can split the image into chunks 
+(like groups of rows) and give each chunk to a different computer to work on at 
+the same time. At the end, the coordinating computer can then combine these chunks 
+together for the final result.
+
+------------------------------------------------
+3. At “farther away” zooms with 1 centered sample per pixel, some regions of 
+the set will look like speckled noise (try zooming into the zoomed view!), with 
+jaggies at the boundary of the set. Consider and discuss what would happen if 
+we sampled at the center of 4 subpixels per pixel and averaged the colors instead, 
+from both a visual perspective and a performance perspective.
+
+A: Performance-wise, we need to call mandelbrotSmooth 4 times for each pixel so it would
+cost 4x as much. As for how it would look, the transitions between colors would look a 
+lot smoother, and edges would be softer and so less speckled noise and jaggies.
